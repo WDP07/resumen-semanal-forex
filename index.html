@@ -73,14 +73,14 @@
 <script>
   const volatilidades = { JPY:1.2, CAD:0.9, CHF:0.8, EUR:0.7, USD:1.0, GBP:0.85, AUD:0.95, NZD:0.9, CNY:0.6 };
 
-  // Al iniciar, set fecha a último lunes y viernes
+  // Initialize default week (last Monday to Friday)
   window.onload = () => {
     const today = new Date();
-    const diff = (today.getDay()+6)%7; // Monday=0
-    const monday = new Date(today - diff*86400000);
-    const friday = new Date(monday.getTime() + 4*86400000);
+    const diff = (today.getDay() + 6) % 7; // Monday=0
+    const monday = new Date(today - diff * 86400000);
+    const friday = new Date(monday.getTime() + 4 * 86400000);
     document.getElementById('startDate').valueAsDate = monday;
-    document.getElementById('endDate').valueAsDate   = friday;
+    document.getElementById('endDate').valueAsDate = friday;
   };
 
   function dayName(hora) {
@@ -95,19 +95,19 @@
     const proxy = 'https://api.codetabs.com/v1/proxy?quest=';
     const url = proxy + encodeURIComponent(`https://www.forexfactory.com/calendar?week=${week}`);
     const res = await fetch(url);
-    if(!res.ok) throw new Error(res.statusText);
+    if (!res.ok) throw new Error(res.statusText);
     const text = await res.text();
     const doc = new DOMParser().parseFromString(text,'text/html');
-    return Array.from(doc.querySelectorAll('tr.calendar__row')).map(tr=>({
-      hora: tr.querySelector('.calendar__cell--time')?.textContent.trim(),
-      div: tr.querySelector('.calendar__cell--currency')?.textContent.trim(),
-      ev: tr.querySelector('.calendar__cell--event')?.textContent.trim(),
-      imp: tr.querySelector('.calendar__cell--impact i')?.getAttribute('title')
+    return Array.from(doc.querySelectorAll('tr[class*="calendar__row"]')).map(tr => ({
+      hora: tr.querySelector('td.calendar__cell--time')?.textContent.trim(),
+      div:  tr.querySelector('td.calendar__cell--currency')?.textContent.trim(),
+      ev:   tr.querySelector('td.calendar__cell--event')?.textContent.trim(),
+      imp:  tr.querySelector('td.calendar__cell--impact i')?.getAttribute('title')
     }));
   }
 
   document.getElementById('loadBtn').onclick = async () => {
-    const spinner = document.getElementById('spinner'); spinner.classList.remove('hidden');
+    document.getElementById('spinner').classList.remove('hidden');
     const start = document.getElementById('startDate').value;
     try {
       const data = await fetchCalendar(start);
@@ -116,40 +116,51 @@
       const strong = g10.filter(c=>!present.has(c));
 
       // Festivos
-      const festBody = document.querySelector('#festivos tbody'); festBody.innerHTML='';
-      data.filter(r=>r.imp==='Holiday').forEach(r=>festBody.insertAdjacentHTML('beforeend',`<tr><td>${r.div}</td><td>${dayName(r.hora)}</td><td>Bank Holiday</td></tr>`));
+      const festBody = document.querySelector('#festivos tbody'); festBody.innerHTML = '';
+      data.filter(r=>r.imp === 'Holiday').forEach(r => {
+        festBody.insertAdjacentHTML('beforeend',
+          `<tr><td>${r.div}</td><td>${dayName(r.hora)}</td><td>Bank Holiday</td></tr>`
+        );
+      });
 
       // Débiles
-      const debBody = document.querySelector('#debiles tbody'); debBody.innerHTML='';
-      data.filter(r=>/speech|statement/i.test(r.ev)).forEach(r=>{
-        const vol = volatilidades[r.div]||0;
-        let estr = 'ESPERA'; if(vol>1) estr='Breakout'; else if(vol>=0.8) estr='Swing';
-        debBody.insertAdjacentHTML('beforeend',`<tr><td>${r.div}</td><td>${r.ev}</td><td>${dayName(r.hora)}</td><td>Alto</td><td>${vol}%</td><td>${estr}</td></tr>`);
+      const debBody = document.querySelector('#debiles tbody'); debBody.innerHTML = '';
+      data.filter(r=>/speech|statement/i.test(r.ev)).forEach(r => {
+        const vol = volatilidades[r.div] || 0;
+        let estr = 'ESPERA'; if (vol > 1) estr='Breakout'; else if (vol >= 0.8) estr='Swing';
+        debBody.insertAdjacentHTML('beforeend',
+          `<tr><td>${r.div}</td><td>${r.ev}</td><td>${dayName(r.hora)}</td><td>Alto</td><td>${vol}%</td><td>${estr}</td></tr>`
+        );
       });
 
       // Fuertes
-      const fuBody = document.querySelector('#fuertes tbody'); fuBody.innerHTML='';
-      strong.forEach(c=>{
-        const vol = volatilidades[c]||0;
-        let estr='ESPERA'; if(vol>1) estr='Breakout'; else if(vol>=0.8) estr='Swing';
-        fuBody.insertAdjacentHTML('beforeend',`<tr><td>${c}</td><td>${vol}%</td><td>${estr}</td></tr>`);
+      const fuBody = document.querySelector('#fuertes tbody'); fuBody.innerHTML = '';
+      strong.forEach(c => {
+        const vol = volatilidades[c] || 0;
+        let estr = 'ESPERA'; if (vol > 1) estr='Breakout'; else if (vol >= 0.8) estr='Swing';
+        fuBody.insertAdjacentHTML('beforeend',
+          `<tr><td>${c}</td><td>${vol}%</td><td>${estr}</td></tr>`
+        );
       });
 
       // Señal
       const firstWeak = data.find(r=>/speech/i.test(r.ev))?.div;
-      document.getElementById('senal').textContent = firstWeak?`Prioriza cruce contra ${firstWeak}`:'No hay débiles esta semana';
+      document.getElementById('senal').textContent = firstWeak ?
+        `Prioriza cruce contra ${firstWeak}` : 'No hay débiles esta semana';
 
       // Forecast diario
       const days = ['lunes','martes','miércoles','jueves','viernes'];
-      const fcBody = document.querySelector('#forecast tbody'); fcBody.innerHTML='';
-      days.forEach(d=>{
-        const w = data.filter(r=>/speech|statement/i.test(r.ev)&&dayName(r.hora)===d).map(r=>r.div);
-        fcBody.insertAdjacentHTML('beforeend',`<tr><td>${d}</td><td>${w.join(',')||'-'}</td><td>${strong.join(',')}</td></tr>`);
+      const fcBody = document.querySelector('#forecast tbody'); fcBody.innerHTML = '';
+      days.forEach(d => {
+        const w = data.filter(r=>/speech|statement/i.test(r.ev) && dayName(r.hora) === d).map(r=>r.div);
+        fcBody.insertAdjacentHTML('beforeend',
+          `<tr><td>${d}</td><td>${w.join(',')||'-'}</td><td>${strong.join(',')}</td></tr>`
+        );
       });
     } catch(e) {
-      alert('Error al cargar: '+e.message);
+      alert('Error al cargar: ' + e.message);
     } finally {
-      spinner.classList.add('hidden');
+      document.getElementById('spinner').classList.add('hidden');
     }
   };
 </script>
