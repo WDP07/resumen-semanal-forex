@@ -1,0 +1,15 @@
+
+{
+  "festivos": [
+    {"divisa": "USD", "dia": "Lunes", "razon": "Día del Trabajo"}
+  ],
+  "debiles": [],
+  "fuertes": [
+    {"divisa": "EUR", "volatilidad": "0.7%", "estrategia": "ESPERA"},
+    {"divisa": "USD", "volatilidad": "1%", "estrategia": "Swing"}
+  ],
+  "senal": "No hay débiles esta semana",
+  "forecast": [
+    {"dia": "lunes", "debiles": "-", "fuertes": "EUR,USD"}
+  ]
+}
