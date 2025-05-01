@@ -80,7 +80,7 @@
     const monday = new Date(today - diff * 86400000);
     const friday = new Date(monday.getTime() + 4 * 86400000);
     document.getElementById('startDate').valueAsDate = monday;
-    document.getElementById('endDate').valueAsDate = friday;
+    document.getElementById('endDate').valueAsDate   = friday;
   };
 
   function dayName(hora) {
@@ -92,18 +92,11 @@
 
   async function fetchCalendar(start) {
     const week = start.replace(/-/g,'');
-    const proxy = 'https://api.codetabs.com/v1/proxy?quest=';
-    const url = proxy + encodeURIComponent(`https://www.forexfactory.com/calendar?week=${week}`);
+    const proxyUrl = 'https://script.google.com/macros/s/AKfycbxa-mEJOBjSGc4aejzEe-UZ_kIiCyE0ufW-GGBNHivFmsRb1vJ3WSjk9MocCHOM4gGs/exec';
+    const url = `${proxyUrl}?week=${week}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(res.statusText);
-    const text = await res.text();
-    const doc = new DOMParser().parseFromString(text,'text/html');
-    return Array.from(doc.querySelectorAll('tr[class*="calendar__row"]')).map(tr => ({
-      hora: tr.querySelector('td.calendar__cell--time')?.textContent.trim(),
-      div:  tr.querySelector('td.calendar__cell--currency')?.textContent.trim(),
-      ev:   tr.querySelector('td.calendar__cell--event')?.textContent.trim(),
-      imp:  tr.querySelector('td.calendar__cell--impact i')?.getAttribute('title')
-    }));
+    return await res.json();
   }
 
   document.getElementById('loadBtn').onclick = async () => {
