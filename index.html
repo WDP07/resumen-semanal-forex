@@ -1,161 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resumen Semanal Forex Calendar</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resumen Semanal Forex</title>
+  <script src="script.js" defer></script>
+  <link href="styles.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-50 p-4">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4 text-center">Resumen Semanal Forex Factory</h1>
-
-    <div class="flex items-center space-x-2 mb-4">
-      <label class="font-medium">Semana:</label>
-      <input type="date" id="startDate" class="border rounded p-1" />
-      <input type="date" id="endDate" class="border rounded p-1" readonly />
-      <button id="loadBtn" class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Cargar</button>
-      <span id="spinner" class="ml-2 text-gray-500 hidden">Cargando...</span>
-    </div>
-
-    <!-- 1 Festivos -->
-    <section class="mb-6">
-      <h2 class="text-xl font-semibold mb-2">1. Festivos</h2>
-      <div class="overflow-x-auto">
-        <table id="festivos" class="table-auto w-full bg-white shadow-sm rounded">
-          <thead><tr class="bg-gray-100"><th class="px-4 py-2">Divisa</th><th>Día</th><th>Razón</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 2 Débiles -->
-    <section class="mb-6">
-      <h2 class="text-xl font-semibold mb-2">2. Divisas Débiles (Discursos)</h2>
-      <div class="overflow-x-auto">
-        <table id="debiles" class="table-auto w-full bg-white shadow-sm rounded">
-          <thead><tr class="bg-gray-100"><th>Divisa</th><th>Evento</th><th>Día</th><th>% Riesgo</th><th>Volatilidad</th><th>Estrategia</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 3 Fuertes -->
-    <section class="mb-6">
-      <h2 class="text-xl font-semibold mb-2">3. Divisas Fuertes (sin noticias)</h2>
-      <div class="overflow-x-auto">
-        <table id="fuertes" class="table-auto w-full bg-white shadow-sm rounded">
-          <thead><tr class="bg-gray-100"><th>Divisa</th><th>Volatilidad</th><th>Estrategia</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 4 Señal Rápida -->
-    <section class="mb-6">
-      <h2 class="text-xl font-semibold mb-2">4. Señal Rápida</h2>
-      <p id="senal" class="bg-white p-3 shadow-sm rounded"></p>
-    </section>
-
-    <!-- 5 Forecast -->
-    <section class="mb-6">
-      <h2 class="text-xl font-semibold mb-2">5. Forecast Diario</h2>
-      <div class="overflow-x-auto">
-        <table id="forecast" class="table-auto w-full bg-white shadow-sm rounded">
-          <thead><tr class="bg-gray-100"><th>Día</th><th>Débiles</th><th>Fuertes</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+<body>
+  <div class="container">
+    <h1>Resumen Semanal Forex</h1>
+    <label for="fecha">Selecciona una fecha:</label>
+    <input type="date" id="fecha" />
+    <button onclick="cargarDatos()">Cargar datos</button>
+    <div id="mensaje" class="mensaje"></div>
+    <div id="resultado" class="resultado"></div>
   </div>
-
-<script>
-  const volatilidades = { JPY:1.2, CAD:0.9, CHF:0.8, EUR:0.7, USD:1.0, GBP:0.85, AUD:0.95, NZD:0.9, CNY:0.6 };
-
-  // Initialize default week (last Monday to Friday)
-  window.onload = () => {
-    const today = new Date();
-    const diff = (today.getDay() + 6) % 7; // Monday=0
-    const monday = new Date(today - diff * 86400000);
-    const friday = new Date(monday.getTime() + 4 * 86400000);
-    document.getElementById('startDate').valueAsDate = monday;
-    document.getElementById('endDate').valueAsDate   = friday;
-  };
-
-  function dayName(hora) {
-    const [mon, day] = hora.split(' ');
-    const year = new Date().getFullYear();
-    const date = new Date(`${mon} ${day}, ${year}`);
-    return date.toLocaleDateString('es-ES',{weekday:'long'});
-  }
-
-  async function fetchCalendar(start) {
-    const week = start.replace(/-/g,'');
-    const proxyUrl = 'https://script.google.com/macros/s/AKfycbxa-mEJOBjSGc4aejzEe-UZ_kIiCyE0ufW-GGBNHivFmsRb1vJ3WSjk9MocCHOM4gGs/exec';
-    const url = `${proxyUrl}?week=${week}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(res.statusText);
-    return await res.json();
-  }
-
-  document.getElementById('loadBtn').onclick = async () => {
-    document.getElementById('spinner').classList.remove('hidden');
-    const start = document.getElementById('startDate').value;
-    try {
-      const data = await fetchCalendar(start);
-      const g10 = ['EUR','USD','JPY','GBP','AUD','CAD','CHF','NZD','CNY'];
-      const present = new Set(data.map(r=>r.div));
-      const strong = g10.filter(c=>!present.has(c));
-
-      // Festivos
-      const festBody = document.querySelector('#festivos tbody'); festBody.innerHTML = '';
-      data.filter(r=>r.imp === 'Holiday').forEach(r => {
-        festBody.insertAdjacentHTML('beforeend',
-          `<tr><td>${r.div}</td><td>${dayName(r.hora)}</td><td>Bank Holiday</td></tr>`
-        );
-      });
-
-      // Débiles
-      const debBody = document.querySelector('#debiles tbody'); debBody.innerHTML = '';
-      data.filter(r=>/speech|statement/i.test(r.ev)).forEach(r => {
-        const vol = volatilidades[r.div] || 0;
-        let estr = 'ESPERA'; if (vol > 1) estr='Breakout'; else if (vol >= 0.8) estr='Swing';
-        debBody.insertAdjacentHTML('beforeend',
-          `<tr><td>${r.div}</td><td>${r.ev}</td><td>${dayName(r.hora)}</td><td>Alto</td><td>${vol}%</td><td>${estr}</td></tr>`
-        );
-      });
-
-      // Fuertes
-      const fuBody = document.querySelector('#fuertes tbody'); fuBody.innerHTML = '';
-      strong.forEach(c => {
-        const vol = volatilidades[c] || 0;
-        let estr = 'ESPERA'; if (vol > 1) estr='Breakout'; else if (vol >= 0.8) estr='Swing';
-        fuBody.insertAdjacentHTML('beforeend',
-          `<tr><td>${c}</td><td>${vol}%</td><td>${estr}</td></tr>`
-        );
-      });
-
-      // Señal
-      const firstWeak = data.find(r=>/speech/i.test(r.ev))?.div;
-      document.getElementById('senal').textContent = firstWeak ?
-        `Prioriza cruce contra ${firstWeak}` : 'No hay débiles esta semana';
-
-      // Forecast diario
-      const days = ['lunes','martes','miércoles','jueves','viernes'];
-      const fcBody = document.querySelector('#forecast tbody'); fcBody.innerHTML = '';
-      days.forEach(d => {
-        const w = data.filter(r=>/speech|statement/i.test(r.ev) && dayName(r.hora) === d).map(r=>r.div);
-        fcBody.insertAdjacentHTML('beforeend',
-          `<tr><td>${d}</td><td>${w.join(',')||'-'}</td><td>${strong.join(',')}</td></tr>`
-        );
-      });
-    } catch(e) {
-      alert('Error al cargar: ' + e.message);
-    } finally {
-      document.getElementById('spinner').classList.add('hidden');
-    }
-  };
-</script>
 </body>
 </html>
