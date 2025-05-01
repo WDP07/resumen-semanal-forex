@@ -92,7 +92,7 @@
 
   async function fetchCalendar(start) {
     const week = start.replace(/-/g,'');
-    const proxy = 'https://api.allorigins.win/raw?url=';
+    const proxy = 'https://api.codetabs.com/v1/proxy?quest=';
     const url = proxy + encodeURIComponent(`https://www.forexfactory.com/calendar?week=${week}`);
     const res = await fetch(url);
     if(!res.ok) throw new Error(res.statusText);
