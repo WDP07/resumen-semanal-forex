@@ -11,26 +11,36 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#2563eb',
-                        secondary: '#1e40af',
-                        dark: '#1e293b',
-                        light: '#f8fafc',
+                        primary: '#3b82f6',
+                        secondary: '#2563eb',
+                        dark: '#111827',
+                        darker: '#0f172a',
+                        light: '#f3f4f6',
+                        lighter: '#e5e7eb',
                         success: '#10b981',
                         danger: '#ef4444',
-                        warning: '#f59e0b'
+                        warning: '#f59e0b',
+                        info: '#8b5cf6'
                     }
                 }
             }
         }
     </script>
     <style>
+        body {
+            background-color: #111827;
+            color: #e5e7eb;
+        }
         .floating-card {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            background-color: #1f2937;
+            border: 1px solid #374151;
         }
         .floating-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            border-color: #4b5563;
         }
         .positive-change {
             animation: pulseGreen 2s infinite;
@@ -52,24 +62,43 @@
             font-size: 0.8rem;
             opacity: 0.8;
         }
+        .volatility-high {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid #ef4444;
+        }
+        .volatility-medium {
+            background-color: rgba(245, 158, 11, 0.2);
+            border-left: 4px solid #f59e0b;
+        }
+        .volatility-low {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-left: 4px solid #10b981;
+        }
+        .news-card {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+        }
+        .news-card:hover {
+            border-color: #4b5563;
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-dark text-light">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="mb-10 text-center">
             <h1 class="text-4xl font-bold text-primary mb-2">Resumen Financiero Global</h1>
-            <p class="text-lg text-gray-600">Datos actualizados del mercado financiero internacional</p>
+            <p class="text-lg text-lighter">Datos actualizados del mercado financiero internacional</p>
             <div class="mt-4 last-updated">
-                <span id="lastUpdated" class="bg-dark text-white px-3 py-1 rounded-full">Última actualización: Cargando...</span>
+                <span id="lastUpdated" class="bg-darker text-light px-3 py-1 rounded-full">Última actualización: Cargando...</span>
             </div>
         </header>
 
         <!-- Market Overview -->
         <section class="mb-12">
-            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Panorama del Mercado</h2>
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-700">Panorama del Mercado</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex items-center mb-4">
                         <i class="fas fa-globe-americas text-2xl text-primary mr-3"></i>
                         <h3 class="text-xl font-semibold">Índices Globales</h3>
@@ -79,7 +108,7 @@
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex items-center mb-4">
                         <i class="fas fa-money-bill-wave text-2xl text-success mr-3"></i>
                         <h3 class="text-xl font-semibold">Divisas Principales</h3>
@@ -89,7 +118,7 @@
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex items-center mb-4">
                         <i class="fab fa-bitcoin text-2xl text-warning mr-3"></i>
                         <h3 class="text-xl font-semibold">Criptomonedas</h3>
@@ -103,16 +132,16 @@
 
         <!-- Detailed Market Data -->
         <section class="mb-12">
-            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Índices Americanos</h2>
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-700">Índices Americanos</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- S&P 500 -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">S&P 500</h3>
-                            <p class="text-gray-500 text-sm">Índice de EE.UU.</p>
+                            <p class="text-gray-400 text-sm">Índice de EE.UU.</p>
                         </div>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
+                        <span class="bg-blue-900 text-blue-200 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -126,13 +155,13 @@
                 </div>
                 
                 <!-- Dow Jones -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">Dow Jones</h3>
-                            <p class="text-gray-500 text-sm">Índice Industrial</p>
+                            <p class="text-gray-400 text-sm">Índice Industrial</p>
                         </div>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
+                        <span class="bg-blue-900 text-blue-200 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -146,13 +175,13 @@
                 </div>
                 
                 <!-- NASDAQ -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">NASDAQ</h3>
-                            <p class="text-gray-500 text-sm">Tecnología EE.UU.</p>
+                            <p class="text-gray-400 text-sm">Tecnología EE.UU.</p>
                         </div>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
+                        <span class="bg-blue-900 text-blue-200 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -166,13 +195,13 @@
                 </div>
                 
                 <!-- VIX -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">Índice VIX</h3>
-                            <p class="text-gray-500 text-sm">Volatilidad</p>
+                            <p class="text-gray-400 text-sm">Volatilidad</p>
                         </div>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
+                        <span class="bg-blue-900 text-blue-200 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -189,16 +218,16 @@
 
         <!-- Currency Exchange -->
         <section class="mb-12">
-            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Mercado de Divisas</h2>
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-700">Mercado de Divisas</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- EUR/USD -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">EUR/USD</h3>
-                            <p class="text-gray-500 text-sm">Euro vs Dólar</p>
+                            <p class="text-gray-400 text-sm">Euro vs Dólar</p>
                         </div>
-                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
+                        <span class="bg-green-900 text-green-200 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -212,13 +241,13 @@
                 </div>
                 
                 <!-- USD/JPY -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">USD/JPY</h3>
-                            <p class="text-gray-500 text-sm">Dólar vs Yen</p>
+                            <p class="text-gray-400 text-sm">Dólar vs Yen</p>
                         </div>
-                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
+                        <span class="bg-green-900 text-green-200 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -232,13 +261,13 @@
                 </div>
                 
                 <!-- GBP/USD -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">GBP/USD</h3>
-                            <p class="text-gray-500 text-sm">Libra vs Dólar</p>
+                            <p class="text-gray-400 text-sm">Libra vs Dólar</p>
                         </div>
-                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
+                        <span class="bg-green-900 text-green-200 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -252,13 +281,13 @@
                 </div>
                 
                 <!-- USD/MXN -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">USD/MXN</h3>
-                            <p class="text-gray-500 text-sm">Dólar vs Peso</p>
+                            <p class="text-gray-400 text-sm">Dólar vs Peso</p>
                         </div>
-                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
+                        <span class="bg-green-900 text-green-200 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -275,16 +304,16 @@
 
         <!-- Cryptocurrencies -->
         <section class="mb-12">
-            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Criptomonedas</h2>
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-700">Criptomonedas</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Bitcoin -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">Bitcoin</h3>
-                            <p class="text-gray-500 text-sm">BTC/USD</p>
+                            <p class="text-gray-400 text-sm">BTC/USD</p>
                         </div>
-                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
+                        <span class="bg-yellow-900 text-yellow-200 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -298,13 +327,13 @@
                 </div>
                 
                 <!-- Ethereum -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">Ethereum</h3>
-                            <p class="text-gray-500 text-sm">ETH/USD</p>
+                            <p class="text-gray-400 text-sm">ETH/USD</p>
                         </div>
-                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
+                        <span class="bg-yellow-900 text-yellow-200 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -317,34 +346,34 @@
                     </div>
                 </div>
                 
-                <!-- Binance Coin -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <!-- Monero -->
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <h3 class="text-xl font-bold">Binance Coin</h3>
-                            <p class="text-gray-500 text-sm">BNB/USD</p>
+                            <h3 class="text-xl font-bold">Monero</h3>
+                            <p class="text-gray-400 text-sm">XMR/USD</p>
                         </div>
-                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
+                        <span class="bg-yellow-900 text-yellow-200 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
-                            <p class="text-3xl font-bold" id="bnb-price">-</p>
-                            <p class="text-sm" id="bnb-change">Cargando...</p>
+                            <p class="text-3xl font-bold" id="xmr-price">-</p>
+                            <p class="text-sm" id="xmr-change">Cargando...</p>
                         </div>
-                        <div class="w-20 h-12" id="bnb-chart">
+                        <div class="w-20 h-12" id="xmr-chart">
                             <!-- Mini gráfico iría aquí -->
                         </div>
                     </div>
                 </div>
                 
                 <!-- Solana -->
-                <div class="bg-white rounded-xl p-6 floating-card">
+                <div class="rounded-xl p-6 floating-card">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-xl font-bold">Solana</h3>
-                            <p class="text-gray-500 text-sm">SOL/USD</p>
+                            <p class="text-gray-400 text-sm">SOL/USD</p>
                         </div>
-                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
+                        <span class="bg-yellow-900 text-yellow-200 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
@@ -361,15 +390,15 @@
 
         <!-- Market News -->
         <section class="mb-12">
-            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Noticias del Mercado</h2>
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-700">Noticias del Mercado</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- News 1 -->
-                <div class="bg-white rounded-xl overflow-hidden floating-card">
+                <div class="rounded-xl overflow-hidden news-card">
                     <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Mercado financiero" class="w-full h-48 object-cover">
                     <div class="p-6">
                         <span class="bg-primary text-white text-xs font-medium px-2.5 py-0.5 rounded mb-2 inline-block">Análisis</span>
                         <h3 class="text-xl font-bold mb-2">La Fed mantiene tasas sin cambios</h3>
-                        <p class="text-gray-600 mb-4">La Reserva Federal decidió mantener las tasas de interés en el rango actual, señalando cautela ante la inflación persistente.</p>
+                        <p class="text-gray-400 mb-4">La Reserva Federal decidió mantener las tasas de interés en el rango actual, señalando cautela ante la inflación persistente.</p>
                         <div class="flex items-center text-sm text-gray-500">
                             <span>Hace 2 horas</span>
                             <span class="mx-2">•</span>
@@ -379,12 +408,12 @@
                 </div>
                 
                 <!-- News 2 -->
-                <div class="bg-white rounded-xl overflow-hidden floating-card">
+                <div class="rounded-xl overflow-hidden news-card">
                     <img src="https://images.unsplash.com/photo-1639754390580-2e7437267698?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Bitcoin" class="w-full h-48 object-cover">
                     <div class="p-6">
                         <span class="bg-warning text-white text-xs font-medium px-2.5 py-0.5 rounded mb-2 inline-block">Cripto</span>
                         <h3 class="text-xl font-bold mb-2">Bitcoin supera los $70,000</h3>
-                        <p class="text-gray-600 mb-4">El precio de Bitcoin alcanza nuevo máximo anual impulsado por la aprobación de nuevos ETFs y mayor adopción institucional.</p>
+                        <p class="text-gray-400 mb-4">El precio de Bitcoin alcanza nuevo máximo anual impulsado por la aprobación de nuevos ETFs y mayor adopción institucional.</p>
                         <div class="flex items-center text-sm text-gray-500">
                             <span>Hoy</span>
                             <span class="mx-2">•</span>
@@ -394,12 +423,12 @@
                 </div>
                 
                 <!-- News 3 -->
-                <div class="bg-white rounded-xl overflow-hidden floating-card">
+                <div class="rounded-xl overflow-hidden news-card">
                     <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Bolsa de valores" class="w-full h-48 object-cover">
                     <div class="p-6">
                         <span class="bg-success text-white text-xs font-medium px-2.5 py-0.5 rounded mb-2 inline-block">Mercados</span>
                         <h3 class="text-xl font-bold mb-2">NVIDIA lidera ganancias en tech</h3>
-                        <p class="text-gray-600 mb-4">Las acciones de NVIDIA suben un 8% tras reportar ganancias récord, impulsando el sector tecnológico.</p>
+                        <p class="text-gray-400 mb-4">Las acciones de NVIDIA suben un 8% tras reportar ganancias récord, impulsando el sector tecnológico.</p>
                         <div class="flex items-center text-sm text-gray-500">
                             <span>Ayer</span>
                             <span class="mx-2">•</span>
@@ -410,34 +439,182 @@
             </div>
         </section>
 
+        <!-- Low Activity Currencies -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-700">Divisas con Baja Actividad</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Divisas sin noticias -->
+                <div class="rounded-xl p-6 floating-card">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-volume-mute text-2xl text-gray-500 mr-3"></i>
+                        <h3 class="text-xl font-semibold">Divisas sin Noticias Relevantes</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="font-medium">AUD/JPY</span>
+                                <span class="text-xs text-gray-400 ml-2">Dólar Australiano vs Yen</span>
+                            </div>
+                            <span class="text-xs text-gray-400">Sin noticias esta semana</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="font-medium">CAD/CHF</span>
+                                <span class="text-xs text-gray-400 ml-2">Dólar Canadiense vs Franco Suizo</span>
+                            </div>
+                            <span class="text-xs text-gray-400">Sin noticias esta semana</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="font-medium">NZD/USD</span>
+                                <span class="text-xs text-gray-400 ml-2">Dólar Neozelandés vs Dólar</span>
+                            </div>
+                            <span class="text-xs text-gray-400">Sin noticias esta semana</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Divisas con solo discursos -->
+                <div class="rounded-xl p-6 floating-card">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-comment-dots text-2xl text-info mr-3"></i>
+                        <h3 class="text-xl font-semibold">Discursos Relevantes</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-800 rounded-lg">
+                            <div class="flex items-center mb-1">
+                                <span class="font-medium">EUR/GBP</span>
+                                <span class="text-xs text-gray-400 ml-2">Euro vs Libra</span>
+                            </div>
+                            <p class="text-sm text-gray-300">Presidente del BCE mencionó posibles ajustes en política monetaria pero sin datos concretos.</p>
+                        </div>
+                        <div class="p-3 bg-gray-800 rounded-lg">
+                            <div class="flex items-center mb-1">
+                                <span class="font-medium">USD/CHF</span>
+                                <span class="text-xs text-gray-400 ml-2">Dólar vs Franco Suizo</span>
+                            </div>
+                            <p class="text-sm text-gray-300">Banco Nacional Suizo mantuvo discurso neutral sobre intervenciones en el mercado.</p>
+                        </div>
+                        <div class="p-3 bg-gray-800 rounded-lg">
+                            <div class="flex items-center mb-1">
+                                <span class="font-medium">USD/CAD</span>
+                                <span class="text-xs text-gray-400 ml-2">Dólar vs Dólar Canadiense</span>
+                            </div>
+                            <p class="text-sm text-gray-300">Gobernador del Banco de Canadá habló sobre inflación pero sin anunciar cambios.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Options Market Volatility -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-700">Volatilidad Implícita en Opciones</h2>
+            <div class="rounded-xl p-6 floating-card">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Alta volatilidad -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-danger mr-2"></span>
+                            Alta Volatilidad
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-3 rounded volatility-high">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-medium">BTC Opciones</span>
+                                    <span class="text-danger font-bold">85%</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">Próximo halving de Bitcoin</p>
+                            </div>
+                            <div class="p-3 rounded volatility-high">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-medium">NASDAQ-100</span>
+                                    <span class="text-danger font-bold">32%</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">Resultados de grandes tecnológicas</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Media volatilidad -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-warning mr-2"></span>
+                            Media Volatilidad
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-3 rounded volatility-medium">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-medium">S&P 500</span>
+                                    <span class="text-warning font-bold">18%</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">Expectativas de tasas de la Fed</p>
+                            </div>
+                            <div class="p-3 rounded volatility-medium">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-medium">Oro</span>
+                                    <span class="text-warning font-bold">15%</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">Tensiones geopolíticas</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Baja volatilidad -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-success mr-2"></span>
+                            Baja Volatilidad
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-3 rounded volatility-low">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-medium">Bonos del Tesoro</span>
+                                    <span class="text-success font-bold">8%</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">Mercado espera estabilidad</p>
+                            </div>
+                            <div class="p-3 rounded volatility-low">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-medium">EUR/USD</span>
+                                    <span class="text-success font-bold">6.5%</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">Políticas monetarias estables</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Footer -->
-        <footer class="bg-dark text-white rounded-xl p-8">
+        <footer class="bg-darker text-gray-300 rounded-xl p-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Resumen Financiero</h3>
-                    <p class="text-gray-300">Información actualizada diariamente sobre los mercados financieros globales.</p>
+                    <h3 class="text-xl font-bold mb-4 text-white">Resumen Financiero</h3>
+                    <p>Información actualizada diariamente sobre los mercados financieros globales.</p>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Mercados</h4>
+                    <h4 class="font-semibold mb-4 text-white">Mercados</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white">Índices</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Divisas</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Criptomonedas</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Materias primas</a></li>
+                        <li><a href="#" class="hover:text-white transition">Índices</a></li>
+                        <li><a href="#" class="hover:text-white transition">Divisas</a></li>
+                        <li><a href="#" class="hover:text-white transition">Criptomonedas</a></li>
+                        <li><a href="#" class="hover:text-white transition">Materias primas</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Recursos</h4>
+                    <h4 class="font-semibold mb-4 text-white">Recursos</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white">Gráficos</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Calculadoras</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Glosario</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Educación</a></li>
+                        <li><a href="#" class="hover:text-white transition">Gráficos</a></li>
+                        <li><a href="#" class="hover:text-white transition">Calculadoras</a></li>
+                        <li><a href="#" class="hover:text-white transition">Glosario</a></li>
+                        <li><a href="#" class="hover:text-white transition">Educación</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Suscríbete</h4>
-                    <p class="text-gray-300 mb-4">Recibe nuestro resumen diario en tu email.</p>
+                    <h4 class="font-semibold mb-4 text-white">Suscríbete</h4>
+                    <p class="mb-4">Recibe nuestro resumen diario en tu email.</p>
                     <form class="flex">
                         <input type="email" placeholder="Tu email" class="px-4 py-2 rounded-l-lg w-full text-gray-800">
                         <button type="submit" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-secondary transition">
@@ -529,7 +706,7 @@
             document.getElementById('sp500-change').innerHTML = `
                 <span class="${sp500Change.isPositive ? 'text-success' : 'text-danger'}">
                     ${sp500Change.isPositive ? '+' : ''}${sp500Change.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('sp500-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(sp500Price, 0.5)), 
@@ -542,7 +719,7 @@
             document.getElementById('dow-change').innerHTML = `
                 <span class="${dowChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${dowChange.isPositive ? '+' : ''}${dowChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('dow-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(dowPrice, 0.5)), 
@@ -555,7 +732,7 @@
             document.getElementById('nasdaq-change').innerHTML = `
                 <span class="${nasdaqChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${nasdaqChange.isPositive ? '+' : ''}${nasdaqChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('nasdaq-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(nasdaqPrice, 0.8)), 
@@ -568,7 +745,7 @@
             document.getElementById('vix-change').innerHTML = `
                 <span class="${vixChange.isPositive ? 'text-danger' : 'text-success'}">
                     ${vixChange.isPositive ? '+' : ''}${vixChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('vix-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(vixPrice, 5)), 
@@ -582,7 +759,7 @@
             document.getElementById('eurusd-change').innerHTML = `
                 <span class="${eurusdChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${eurusdChange.isPositive ? '+' : ''}${eurusdChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('eurusd-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(eurusdPrice, 0.2)), 
@@ -595,7 +772,7 @@
             document.getElementById('usdjpy-change').innerHTML = `
                 <span class="${usdjpyChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${usdjpyChange.isPositive ? '+' : ''}${usdjpyChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('usdjpy-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(usdjpyPrice, 0.2)), 
@@ -608,7 +785,7 @@
             document.getElementById('gbpusd-change').innerHTML = `
                 <span class="${gbpusdChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${gbpusdChange.isPositive ? '+' : ''}${gbpusdChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('gbpusd-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(gbpusdPrice, 0.2)), 
@@ -621,7 +798,7 @@
             document.getElementById('usdmxn-change').innerHTML = `
                 <span class="${usdmxnChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${usdmxnChange.isPositive ? '+' : ''}${usdmxnChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('usdmxn-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(usdmxnPrice, 0.2)), 
@@ -635,7 +812,7 @@
             document.getElementById('btc-change').innerHTML = `
                 <span class="${btcChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${btcChange.isPositive ? '+' : ''}${btcChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('btc-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(btcPrice, 2)), 
@@ -648,24 +825,24 @@
             document.getElementById('eth-change').innerHTML = `
                 <span class="${ethChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${ethChange.isPositive ? '+' : ''}${ethChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('eth-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(ethPrice, 2)), 
                 ethChange.isPositive
             );
             
-            const bnbPrice = randomPrice(600, 5);
-            const bnbChange = randomChange();
-            document.getElementById('bnb-price').textContent = `$${formatNumber(bnbPrice.toFixed(2))}`;
-            document.getElementById('bnb-change').innerHTML = `
-                <span class="${bnbChange.isPositive ? 'text-success' : 'text-danger'}">
-                    ${bnbChange.isPositive ? '+' : ''}${bnbChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+            const xmrPrice = randomPrice(170, 8); // Monero con mayor volatilidad
+            const xmrChange = randomChange();
+            document.getElementById('xmr-price').textContent = `$${formatNumber(xmrPrice.toFixed(2))}`;
+            document.getElementById('xmr-change').innerHTML = `
+                <span class="${xmrChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${xmrChange.isPositive ? '+' : ''}${xmrChange.value}%
+                </span> <span class="text-gray-400">1D</span>
             `;
-            document.getElementById('bnb-chart').innerHTML = generateMiniChart(
-                Array.from({length: 10}, (_, i) => randomPrice(bnbPrice, 2)), 
-                bnbChange.isPositive
+            document.getElementById('xmr-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(xmrPrice, 4)), 
+                xmrChange.isPositive
             );
             
             const solPrice = randomPrice(170, 5);
@@ -674,7 +851,7 @@
             document.getElementById('sol-change').innerHTML = `
                 <span class="${solChange.isPositive ? 'text-success' : 'text-danger'}">
                     ${solChange.isPositive ? '+' : ''}${solChange.value}%
-                </span> <span class="text-gray-500">1D</span>
+                </span> <span class="text-gray-400">1D</span>
             `;
             document.getElementById('sol-chart').innerHTML = generateMiniChart(
                 Array.from({length: 10}, (_, i) => randomPrice(solPrice, 2)), 
@@ -737,10 +914,10 @@
                         ${ethChange.isPositive ? '+' : ''}${ethChange.value}%
                     </span>
                 </div>
-                <div class="flex justify-between items-center ${solChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
-                    <span>Solana</span>
-                    <span class="${solChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
-                        ${solChange.isPositive ? '+' : ''}${solChange.value}%
+                <div class="flex justify-between items-center ${xmrChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>Monero</span>
+                    <span class="${xmrChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${xmrChange.isPositive ? '+' : ''}${xmrChange.value}%
                     </span>
                 </div>
             `;
@@ -758,8 +935,7 @@
             setInterval(updateMarketData, 24 * 60 * 60 * 1000);
             // Para demostración, actualizar cada 30 segundos
             setInterval(updateMarketData, 30000);
-            });
-            </script>
-            </body>
-            
-            </html>
+        });
+    </script>
+</body>
+</html>
