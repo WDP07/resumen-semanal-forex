@@ -1,58 +1,765 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resumen Semanal Forex</title>
-  <style>
-    body { font-family: Arial, sans-serif; font-size: 10px; padding: 20px; max-width: 800px; margin: auto; }
-    h1 { font-size: 14px; }
-    label, button, select, input { font-size: 10px; }
-    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
-    th, td { border: 1px solid #ccc; padding: 4px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .section { margin-bottom: 30px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Financiero Global</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#1e40af',
+                        dark: '#1e293b',
+                        light: '#f8fafc',
+                        success: '#10b981',
+                        danger: '#ef4444',
+                        warning: '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .floating-card {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        .floating-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .positive-change {
+            animation: pulseGreen 2s infinite;
+        }
+        .negative-change {
+            animation: pulseRed 2s infinite;
+        }
+        @keyframes pulseGreen {
+            0% { background-color: rgba(16, 185, 129, 0.1); }
+            50% { background-color: rgba(16, 185, 129, 0.3); }
+            100% { background-color: rgba(16, 185, 129, 0.1); }
+        }
+        @keyframes pulseRed {
+            0% { background-color: rgba(239, 68, 68, 0.1); }
+            50% { background-color: rgba(239, 68, 68, 0.3); }
+            100% { background-color: rgba(239, 68, 68, 0.1); }
+        }
+        .last-updated {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+    </style>
 </head>
-<body>
-  <h1>Resumen Semanal Forex</h1>
-  <label for="fecha">Selecciona una fecha:</label>
-  <input type="date" id="fecha" />
-  <button onclick="cargarDatos()">Cargar datos</button>
-  <div id="contenido"></div>
-  <script>
-    function cargarDatos() {
-      const fecha = document.getElementById("fecha").value;
-      if (!fecha) return alert("Por favor selecciona una fecha.");
-      fetch("datos.json")
-        .then(res => res.json())
-        .then(data => {
-          const div = document.getElementById("contenido");
-          let html = "";
+<body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-bold text-primary mb-2">Resumen Financiero Global</h1>
+            <p class="text-lg text-gray-600">Datos actualizados del mercado financiero internacional</p>
+            <div class="mt-4 last-updated">
+                <span id="lastUpdated" class="bg-dark text-white px-3 py-1 rounded-full">Última actualización: Cargando...</span>
+            </div>
+        </header>
 
-          html += "<div class='section'><h2>1. Festivos</h2><table><tr><th>Divisa</th><th>Día</th><th>Razón</th></tr>";
-          data.festivos.forEach(x => html += `<tr><td>${x.divisa}</td><td>${x.dia}</td><td>${x.razon}</td></tr>`);
-          html += "</table></div>";
+        <!-- Market Overview -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Panorama del Mercado</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-globe-americas text-2xl text-primary mr-3"></i>
+                        <h3 class="text-xl font-semibold">Índices Globales</h3>
+                    </div>
+                    <div id="globalIndices" class="space-y-4">
+                        <!-- Datos se cargarán aquí -->
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-money-bill-wave text-2xl text-success mr-3"></i>
+                        <h3 class="text-xl font-semibold">Divisas Principales</h3>
+                    </div>
+                    <div id="majorCurrencies" class="space-y-4">
+                        <!-- Datos se cargarán aquí -->
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex items-center mb-4">
+                        <i class="fab fa-bitcoin text-2xl text-warning mr-3"></i>
+                        <h3 class="text-xl font-semibold">Criptomonedas</h3>
+                    </div>
+                    <div id="cryptoCurrencies" class="space-y-4">
+                        <!-- Datos se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </section>
 
-          html += "<div class='section'><h2>2. Divisas Débiles (Discursos)</h2><table><tr><th>Divisa</th><th>Evento</th><th>Día</th><th>% Riesgo</th><th>Volatilidad</th><th>Estrategia</th></tr>";
-          data.debiles.forEach(x => html += `<tr><td>${x.divisa}</td><td>${x.evento}</td><td>${x.dia}</td><td>${x.riesgo}</td><td>${x.volatilidad}</td><td>${x.estrategia}</td></tr>`);
-          html += "</table></div>";
+        <!-- Detailed Market Data -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Índices Americanos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- S&P 500 -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">S&P 500</h3>
+                            <p class="text-gray-500 text-sm">Índice de EE.UU.</p>
+                        </div>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="sp500-price">-</p>
+                            <p class="text-sm" id="sp500-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="sp500-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dow Jones -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Dow Jones</h3>
+                            <p class="text-gray-500 text-sm">Índice Industrial</p>
+                        </div>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="dow-price">-</p>
+                            <p class="text-sm" id="dow-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="dow-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NASDAQ -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">NASDAQ</h3>
+                            <p class="text-gray-500 text-sm">Tecnología EE.UU.</p>
+                        </div>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="nasdaq-price">-</p>
+                            <p class="text-sm" id="nasdaq-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="nasdaq-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- VIX -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Índice VIX</h3>
+                            <p class="text-gray-500 text-sm">Volatilidad</p>
+                        </div>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">USA</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="vix-price">-</p>
+                            <p class="text-sm" id="vix-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="vix-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-          html += "<div class='section'><h2>3. Divisas Fuertes (sin noticias)</h2><table><tr><th>Divisa</th><th>Volatilidad</th><th>Estrategia</th></tr>";
-          data.fuertes.forEach(x => html += `<tr><td>${x.divisa}</td><td>${x.volatilidad}</td><td>${x.estrategia}</td></tr>`);
-          html += "</table></div>";
+        <!-- Currency Exchange -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Mercado de Divisas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- EUR/USD -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">EUR/USD</h3>
+                            <p class="text-gray-500 text-sm">Euro vs Dólar</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="eurusd-price">-</p>
+                            <p class="text-sm" id="eurusd-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="eurusd-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- USD/JPY -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">USD/JPY</h3>
+                            <p class="text-gray-500 text-sm">Dólar vs Yen</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="usdjpy-price">-</p>
+                            <p class="text-sm" id="usdjpy-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="usdjpy-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- GBP/USD -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">GBP/USD</h3>
+                            <p class="text-gray-500 text-sm">Libra vs Dólar</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="gbpusd-price">-</p>
+                            <p class="text-sm" id="gbpusd-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="gbpusd-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- USD/MXN -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">USD/MXN</h3>
+                            <p class="text-gray-500 text-sm">Dólar vs Peso</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">FOREX</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="usdmxn-price">-</p>
+                            <p class="text-sm" id="usdmxn-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="usdmxn-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-          html += "<div class='section'><h2>4. Señal Rápida</h2><p>" + data.senal + "</p></div>";
+        <!-- Cryptocurrencies -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Criptomonedas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Bitcoin -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Bitcoin</h3>
+                            <p class="text-gray-500 text-sm">BTC/USD</p>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="btc-price">-</p>
+                            <p class="text-sm" id="btc-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="btc-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ethereum -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Ethereum</h3>
+                            <p class="text-gray-500 text-sm">ETH/USD</p>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="eth-price">-</p>
+                            <p class="text-sm" id="eth-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="eth-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Binance Coin -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Binance Coin</h3>
+                            <p class="text-gray-500 text-sm">BNB/USD</p>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="bnb-price">-</p>
+                            <p class="text-sm" id="bnb-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="bnb-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solana -->
+                <div class="bg-white rounded-xl p-6 floating-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Solana</h3>
+                            <p class="text-gray-500 text-sm">SOL/USD</p>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">CRYPTO</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p class="text-3xl font-bold" id="sol-price">-</p>
+                            <p class="text-sm" id="sol-change">Cargando...</p>
+                        </div>
+                        <div class="w-20 h-12" id="sol-chart">
+                            <!-- Mini gráfico iría aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-          html += "<div class='section'><h2>5. Forecast Diario</h2><table><tr><th>Día</th><th>Débiles</th><th>Fuertes</th></tr>";
-          data.forecast.forEach(x => html += `<tr><td>${x.dia}</td><td>${x.debiles}</td><td>${x.fuertes}</td></tr>`);
-          html += "</table></div>";
+        <!-- Market News -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200">Noticias del Mercado</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- News 1 -->
+                <div class="bg-white rounded-xl overflow-hidden floating-card">
+                    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Mercado financiero" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="bg-primary text-white text-xs font-medium px-2.5 py-0.5 rounded mb-2 inline-block">Análisis</span>
+                        <h3 class="text-xl font-bold mb-2">La Fed mantiene tasas sin cambios</h3>
+                        <p class="text-gray-600 mb-4">La Reserva Federal decidió mantener las tasas de interés en el rango actual, señalando cautela ante la inflación persistente.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span>Hace 2 horas</span>
+                            <span class="mx-2">•</span>
+                            <span>Bloomberg</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- News 2 -->
+                <div class="bg-white rounded-xl overflow-hidden floating-card">
+                    <img src="https://images.unsplash.com/photo-1639754390580-2e7437267698?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Bitcoin" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="bg-warning text-white text-xs font-medium px-2.5 py-0.5 rounded mb-2 inline-block">Cripto</span>
+                        <h3 class="text-xl font-bold mb-2">Bitcoin supera los $70,000</h3>
+                        <p class="text-gray-600 mb-4">El precio de Bitcoin alcanza nuevo máximo anual impulsado por la aprobación de nuevos ETFs y mayor adopción institucional.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span>Hoy</span>
+                            <span class="mx-2">•</span>
+                            <span>CoinDesk</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- News 3 -->
+                <div class="bg-white rounded-xl overflow-hidden floating-card">
+                    <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Bolsa de valores" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="bg-success text-white text-xs font-medium px-2.5 py-0.5 rounded mb-2 inline-block">Mercados</span>
+                        <h3 class="text-xl font-bold mb-2">NVIDIA lidera ganancias en tech</h3>
+                        <p class="text-gray-600 mb-4">Las acciones de NVIDIA suben un 8% tras reportar ganancias récord, impulsando el sector tecnológico.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span>Ayer</span>
+                            <span class="mx-2">•</span>
+                            <span>CNBC</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-          div.innerHTML = html;
-        })
-        .catch(() => alert("Error al obtener los datos."));
-    }
-  </script>
-</body>
-</html>
+        <!-- Footer -->
+        <footer class="bg-dark text-white rounded-xl p-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Resumen Financiero</h3>
+                    <p class="text-gray-300">Información actualizada diariamente sobre los mercados financieros globales.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Mercados</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">Índices</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Divisas</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Criptomonedas</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Materias primas</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Recursos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">Gráficos</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Calculadoras</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Glosario</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Educación</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Suscríbete</h4>
+                    <p class="text-gray-300 mb-4">Recibe nuestro resumen diario en tu email.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Tu email" class="px-4 py-2 rounded-l-lg w-full text-gray-800">
+                        <button type="submit" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-secondary transition">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 Resumen Financiero Global. Todos los derechos reservados.</p>
+                <p class="mt-2 text-sm">Los datos mostrados tienen un retraso de 15 minutos y son solo con fines informativos.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Función para formatear números con separadores de miles
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Función para generar un cambio porcentual aleatorio entre -5% y +5%
+        function randomChange() {
+            const change = (Math.random() * 10 - 5).toFixed(2);
+            return {
+                value: change,
+                isPositive: parseFloat(change) >= 0
+            };
+        }
+
+        // Función para generar un precio aleatorio basado en un valor base y volatilidad
+        function randomPrice(base, volatility) {
+            const change = (Math.random() * volatility * 2 - volatility) / 100;
+            return base * (1 + change);
+        }
+
+        // Función para actualizar la hora de última actualización
+        function updateLastUpdated() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            };
+            document.getElementById('lastUpdated').textContent = `Última actualización: ${now.toLocaleDateString('es-ES', options)}`;
+        }
+
+        // Función para generar un mini gráfico SVG simple
+        function generateMiniChart(values, isPositive) {
+            const width = 80;
+            const height = 48;
+            const margin = 2;
+            
+            // Normalizar valores para que quepan en el gráfico
+            const max = Math.max(...values);
+            const min = Math.min(...values);
+            const range = max - min;
+            
+            const normalized = values.map(v => {
+                return range !== 0 ? height - margin - ((v - min) / range * (height - margin * 2)) : height / 2;
+            });
+            
+            // Generar puntos para la línea
+            let path = `M0,${normalized[0]}`;
+            for (let i = 1; i < normalized.length; i++) {
+                path += ` L${(width / (normalized.length - 1)) * i},${normalized[i]}`;
+            }
+            
+            const color = isPositive ? '#10b981' : '#ef4444';
+            
+            return `
+                <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="${path}" stroke="${color}" stroke-width="2" fill="none"/>
+                </svg>
+            `;
+        }
+
+        // Función para actualizar todos los datos del mercado
+        function updateMarketData() {
+            // Índices globales
+            const sp500Price = randomPrice(5000, 1.5);
+            const sp500Change = randomChange();
+            document.getElementById('sp500-price').textContent = formatNumber(sp500Price.toFixed(2));
+            document.getElementById('sp500-change').innerHTML = `
+                <span class="${sp500Change.isPositive ? 'text-success' : 'text-danger'}">
+                    ${sp500Change.isPositive ? '+' : ''}${sp500Change.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('sp500-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(sp500Price, 0.5)), 
+                sp500Change.isPositive
+            );
+            
+            const dowPrice = randomPrice(35000, 1.2);
+            const dowChange = randomChange();
+            document.getElementById('dow-price').textContent = formatNumber(dowPrice.toFixed(2));
+            document.getElementById('dow-change').innerHTML = `
+                <span class="${dowChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${dowChange.isPositive ? '+' : ''}${dowChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('dow-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(dowPrice, 0.5)), 
+                dowChange.isPositive
+            );
+            
+            const nasdaqPrice = randomPrice(16000, 2);
+            const nasdaqChange = randomChange();
+            document.getElementById('nasdaq-price').textContent = formatNumber(nasdaqPrice.toFixed(2));
+            document.getElementById('nasdaq-change').innerHTML = `
+                <span class="${nasdaqChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${nasdaqChange.isPositive ? '+' : ''}${nasdaqChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('nasdaq-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(nasdaqPrice, 0.8)), 
+                nasdaqChange.isPositive
+            );
+            
+            const vixPrice = randomPrice(15, 10);
+            const vixChange = randomChange();
+            document.getElementById('vix-price').textContent = vixPrice.toFixed(2);
+            document.getElementById('vix-change').innerHTML = `
+                <span class="${vixChange.isPositive ? 'text-danger' : 'text-success'}">
+                    ${vixChange.isPositive ? '+' : ''}${vixChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('vix-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(vixPrice, 5)), 
+                !vixChange.isPositive
+            );
+            
+            // Divisas
+            const eurusdPrice = randomPrice(1.08, 0.5);
+            const eurusdChange = randomChange();
+            document.getElementById('eurusd-price').textContent = eurusdPrice.toFixed(4);
+            document.getElementById('eurusd-change').innerHTML = `
+                <span class="${eurusdChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${eurusdChange.isPositive ? '+' : ''}${eurusdChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('eurusd-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(eurusdPrice, 0.2)), 
+                eurusdChange.isPositive
+            );
+            
+            const usdjpyPrice = randomPrice(150, 0.5);
+            const usdjpyChange = randomChange();
+            document.getElementById('usdjpy-price').textContent = usdjpyPrice.toFixed(2);
+            document.getElementById('usdjpy-change').innerHTML = `
+                <span class="${usdjpyChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${usdjpyChange.isPositive ? '+' : ''}${usdjpyChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('usdjpy-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(usdjpyPrice, 0.2)), 
+                usdjpyChange.isPositive
+            );
+            
+            const gbpusdPrice = randomPrice(1.26, 0.5);
+            const gbpusdChange = randomChange();
+            document.getElementById('gbpusd-price').textContent = gbpusdPrice.toFixed(4);
+            document.getElementById('gbpusd-change').innerHTML = `
+                <span class="${gbpusdChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${gbpusdChange.isPositive ? '+' : ''}${gbpusdChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('gbpusd-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(gbpusdPrice, 0.2)), 
+                gbpusdChange.isPositive
+            );
+            
+            const usdmxnPrice = randomPrice(17, 0.5);
+            const usdmxnChange = randomChange();
+            document.getElementById('usdmxn-price').textContent = usdmxnPrice.toFixed(2);
+            document.getElementById('usdmxn-change').innerHTML = `
+                <span class="${usdmxnChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${usdmxnChange.isPositive ? '+' : ''}${usdmxnChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('usdmxn-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(usdmxnPrice, 0.2)), 
+                usdmxnChange.isPositive
+            );
+            
+            // Criptomonedas
+            const btcPrice = randomPrice(70000, 5);
+            const btcChange = randomChange();
+            document.getElementById('btc-price').textContent = `$${formatNumber(btcPrice.toFixed(2))}`;
+            document.getElementById('btc-change').innerHTML = `
+                <span class="${btcChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${btcChange.isPositive ? '+' : ''}${btcChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('btc-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(btcPrice, 2)), 
+                btcChange.isPositive
+            );
+            
+            const ethPrice = randomPrice(3500, 5);
+            const ethChange = randomChange();
+            document.getElementById('eth-price').textContent = `$${formatNumber(ethPrice.toFixed(2))}`;
+            document.getElementById('eth-change').innerHTML = `
+                <span class="${ethChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${ethChange.isPositive ? '+' : ''}${ethChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('eth-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(ethPrice, 2)), 
+                ethChange.isPositive
+            );
+            
+            const bnbPrice = randomPrice(600, 5);
+            const bnbChange = randomChange();
+            document.getElementById('bnb-price').textContent = `$${formatNumber(bnbPrice.toFixed(2))}`;
+            document.getElementById('bnb-change').innerHTML = `
+                <span class="${bnbChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${bnbChange.isPositive ? '+' : ''}${bnbChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('bnb-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(bnbPrice, 2)), 
+                bnbChange.isPositive
+            );
+            
+            const solPrice = randomPrice(170, 5);
+            const solChange = randomChange();
+            document.getElementById('sol-price').textContent = `$${formatNumber(solPrice.toFixed(2))}`;
+            document.getElementById('sol-change').innerHTML = `
+                <span class="${solChange.isPositive ? 'text-success' : 'text-danger'}">
+                    ${solChange.isPositive ? '+' : ''}${solChange.value}%
+                </span> <span class="text-gray-500">1D</span>
+            `;
+            document.getElementById('sol-chart').innerHTML = generateMiniChart(
+                Array.from({length: 10}, (_, i) => randomPrice(solPrice, 2)), 
+                solChange.isPositive
+            );
+            
+            // Actualizar resúmenes
+            document.getElementById('globalIndices').innerHTML = `
+                <div class="flex justify-between items-center ${sp500Change.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>S&P 500</span>
+                    <span class="${sp500Change.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${sp500Change.isPositive ? '+' : ''}${sp500Change.value}%
+                    </span>
+                </div>
+                <div class="flex justify-between items-center ${dowChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>Dow Jones</span>
+                    <span class="${dowChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${dowChange.isPositive ? '+' : ''}${dowChange.value}%
+                    </span>
+                </div>
+                <div class="flex justify-between items-center ${nasdaqChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>NASDAQ</span>
+                    <span class="${nasdaqChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${nasdaqChange.isPositive ? '+' : ''}${nasdaqChange.value}%
+                    </span>
+                </div>
+            `;
+            
+            document.getElementById('majorCurrencies').innerHTML = `
+                <div class="flex justify-between items-center ${eurusdChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>EUR/USD</span>
+                    <span class="${eurusdChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${eurusdChange.isPositive ? '+' : ''}${eurusdChange.value}%
+                    </span>
+                </div>
+                <div class="flex justify-between items-center ${usdjpyChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>USD/JPY</span>
+                    <span class="${usdjpyChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${usdjpyChange.isPositive ? '+' : ''}${usdjpyChange.value}%
+                    </span>
+                </div>
+                <div class="flex justify-between items-center ${gbpusdChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>GBP/USD</span>
+                    <span class="${gbpusdChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${gbpusdChange.isPositive ? '+' : ''}${gbpusdChange.value}%
+                    </span>
+                </div>
+            `;
+            
+            document.getElementById('cryptoCurrencies').innerHTML = `
+                <div class="flex justify-between items-center ${btcChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>Bitcoin</span>
+                    <span class="${btcChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${btcChange.isPositive ? '+' : ''}${btcChange.value}%
+                    </span>
+                </div>
+                <div class="flex justify-between items-center ${ethChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>Ethereum</span>
+                    <span class="${ethChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${ethChange.isPositive ? '+' : ''}${ethChange.value}%
+                    </span>
+                </div>
+                <div class="flex justify-between items-center ${solChange.isPositive ? 'positive-change' : 'negative-change'} p-2 rounded-lg">
+                    <span>Solana</span>
+                    <span class="${solChange.isPositive ? 'text-success' : 'text-danger'} font-semibold">
+                        ${solChange.isPositive ? '+' : ''}${solChange.value}%
+                    </span>
+                </div>
+            `;
+            
+            // Actualizar la hora
+            updateLastUpdated();
+        }
+
+        // Actualizar datos al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMarketData();
+            
+            // Simular actualización diaria (cada 24 horas)
+            // En producción, esto se haría con una llamada a una API financiera
+            setInterval(updateMarketData, 24 * 60 * 60 * 1000);
+            // Para demostración, actualizar cada 30 segundos
+            setInterval(updateMarketData, 30000);
+            });
+            </script>
+            </body>
+            
+            </html>
